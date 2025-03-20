@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: S3 File Store Service
+server:
+  port: 8081
+
+minio:
+  endpoint: http://localhost:9000
+  access-key: minio
+  secret-key: 123456778
+#  access-key: 03RA4WG1bZ58wcNYdB3Z
+#  secret-key: mKG6v9UBPYgm3AhU8LJgLDOoqr4UXvgLZBreyUGZ
+
+logging:
+  level:
+    software:
+      amazon:
+        awssdk: DEBUG
