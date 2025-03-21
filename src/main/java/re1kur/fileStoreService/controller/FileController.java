@@ -12,6 +12,8 @@ import re1kur.fileStoreService.service.FileStoreService;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+
 @RestController
 @RequestMapping("api")
 public class FileController {
@@ -24,11 +26,13 @@ public class FileController {
         this.service = service;
     }
 
-    @PostMapping("upload")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> upload(
             @RequestParam("file") MultipartFile file,
             @RequestParam("name") String fileName,
             @RequestParam("bucket") String bucket) throws IOException {
+
+        log.info("Upload Request: {}, {}, {}", file.getOriginalFilename(), fileName, bucket);
         service.upload(file, fileName, bucket);
         return ResponseEntity.ok().body("Successfully uploaded");
     }
@@ -39,7 +43,7 @@ public class FileController {
             @RequestParam("name") String fileName
     ) throws IOException {
         log.info("params: {}, {}", bucket, fileName);
-        InputStream fileStream = service.download(fileName, bucket); // url: bucket/fileName
+        InputStream fileStream = service.download(fileName, bucket);
         byte[] bytes = fileStream.readAllBytes();
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
