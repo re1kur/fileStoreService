@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public interface FileStoreService {
-    void upload(MultipartFile file, String fileName, String bucket) throws IOException;
+    void upload(byte[] fileBytes, String fileName, String bucket) throws IOException;
 
     InputStream download(String fileName, String bucket) throws IOException;
+
+//    String getUrl(String fileName, String bucket);
 }

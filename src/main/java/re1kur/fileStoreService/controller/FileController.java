@@ -6,13 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import re1kur.fileStoreService.service.FileStoreService;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping("api")
@@ -28,12 +26,12 @@ public class FileController {
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> upload(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("file") byte[] fileBytes,
             @RequestParam("name") String fileName,
             @RequestParam("bucket") String bucket) throws IOException {
 
-        log.info("Upload Request: {}, {}, {}", file.getOriginalFilename(), fileName, bucket);
-        service.upload(file, fileName, bucket);
+        log.info("Upload Request: {}, {}, {}", fileBytes.length, fileName, bucket);
+        service.upload(fileBytes, fileName, bucket);
         return ResponseEntity.ok().body("Successfully uploaded");
     }
 

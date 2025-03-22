@@ -6,10 +6,11 @@ import io.minio.PutObjectArgs;
 import io.minio.errors.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import re1kur.fileStoreService.service.FileStoreService;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
@@ -26,23 +27,13 @@ public class DefaultFileStoreService implements FileStoreService {
     }
 
     @Override
-    public void upload(MultipartFile file, String fileName, String bucket) throws IOException {
-        long fileSize = file.getSize();
-        if (fileSize <= 0) {
-            throw new IOException("Invalid file size: " + fileSize);
-        }
-        String contentType = file.getContentType();
-        logger.info(contentType);
-        if (contentType == null || contentType.equals("application/octet-stream")) {
-            contentType = "application/octet-stream";
-        }
-
-        try (InputStream inputStream = file.getInputStream()) {
+    public void upload(byte[] fileBytes, String fileName, String bucket) throws IOException {
+        try (InputStream inputStream = new ByteArrayInputStream(fileBytes)) {
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(bucket)
                     .object(fileName)
-                    .contentType(contentType)
-                    .stream(inputStream, fileSize, -1)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                    .stream(inputStream, fileBytes.length, -1)
                     .build());
 
             logger.info("File '{}' uploaded successfully to bucket '{}'", fileName, bucket);
