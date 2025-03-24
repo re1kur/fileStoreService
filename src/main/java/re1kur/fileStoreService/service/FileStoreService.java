@@ -1,14 +1,13 @@
 package re1kur.fileStoreService.service;
 
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public interface FileStoreService {
-    void upload(byte[] fileBytes, String fileName, String bucket) throws IOException;
+    ResponseEntity<String> upload(byte[] fileBytes, String fileName, String bucket, String contentType) throws IOException;
 
-    InputStream download(String fileName, String bucket) throws IOException;
 
-//    String getUrl(String fileName, String bucket);
+    String getFileUrl(String bucket, String fileName) throws IOException;
+
 }
